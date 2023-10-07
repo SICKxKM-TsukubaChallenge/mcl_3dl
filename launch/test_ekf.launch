@@ -24,7 +24,7 @@
     <remap from="/multiscan/cloud_360" to="cloud"/>      <!-- add -->
   </node>
 
-  <param name="robot_description" textfile="/home/sick/sick_wagen_ws/src/sick_wagen/xacro/sick_wagen.xacro" />
+  <param name="robot_description" textfile="/home/sick/sick_wagen_ws/src/sick_wagen/xacro/sick_wagen_2.xacro" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"></node>
 
   <arg name="config_file" default="$(find mcl_3dl)/config/test_localization.yaml"
@@ -68,5 +68,17 @@
       if="$(arg use_neonavigation)">
     <param name="dist_interval" value="0.5" />
     <param name="ang_interval" value="100.0" />
+  </node>
+
+<!-- -fusion gnss -->
+  <rosparam command="load" file="$(find sick_wagen)/config/robot_localization/rover_amcl.yaml" />
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
+    <remap from="odometry/filtered" to="odometry/filtered_map"/>
+  </node>
+  <!-- x[m] y[m] z[m] yaw(z)[rad] pitch(y)[rad] roll(x)[rad] -->
+  <node pkg="tf" type="static_transform_publisher" name="stp_gps_frame" args="0 0 1.03 0 0 0 base_link gps 100" />
+  <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true">
+    <remap from="odometry/filtered" to="odometry/filtered_map"/>
+    <remap from="gps/fix" to="ublox/fix"/>
   </node>
 </launch>
