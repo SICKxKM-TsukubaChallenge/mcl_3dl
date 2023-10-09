@@ -64,13 +64,13 @@
     <param name="ang_interval" value="100.0" />
   </node>
 
-  <!-- GPS to odometry -->
+    <!-- GPS to odometry -->
 	<node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" respawn="true">
     <rosparam command="load" file="$(find sick_wagen)/launch/stepbystep/100_test_mori/navsat_all.yaml" />
 		<remap from="gps/fix" to="ublox/fix"/>
     <remap from="imu/data" to="imu/data"/>	
     <remap from="odometry/filtered" to="odom"/>
-  </node>
+    </node>
 
 	<!--  robot_localization  -->
 	<rosparam command="load" file="$(find sick_wagen)/config/robot_localization/rover_amcl.yaml" />
